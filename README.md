@@ -598,6 +598,7 @@ function Router() {
 
 자식 Route를 (부모 element의 내부가 아닌) Route 내부에 작성
 부모의 element 안에 Outlet을 이용해 자식 Route들을 render 시키면 됨.
+outlet 사용중 props를 넘기고 싶을 경우 [useOutletContext로 넘어가기]()
 
 ```ts
 // Router.tsx
@@ -678,12 +679,41 @@ const Tab = styled.li<{ isactive: boolean }>`
 </Tabs>;
 ```
 
+## useOutletContext()
+
+```ts
+// Coin.tsx
+<Outlet context={{ coinId }} />;
+
+// Chart.tsx;
+interface ICoinId {
+  coinId: string;
+}
+function Chart() {
+  const { coinId } = useOutletContext<ICoinId>();
+  const { isLoading, data } = useQuery({
+    queryKey: ["ohlcv", coinId], // coinId string|undefined 에러날거임
+    queryFn: () => fetchCoinHistory(coinId),
+  });
+}
+
+// api.ts
+export function fetchCoinHistory(coinId: string | undefined) {
+  // 이거 추가하면 오케
+  // 생략
+}
+```
+
 # React Query
 
 [공식문서](https://tanstack.com/query/v5/)
 
-데이터를 유지, 캐시로 저장함
-API로부터 response를 받아 캐시로 저장하기 때문에 data 찾을 때 캐시에서 찾고 다시 이전 페이지로 돌아와도 API에 접근하지 않는다. 저장된 캐시, 사용하는 쿼리를 보려면 [ReactQueryDevtools](https://tanstack.com/query/v5/docs/react/devtools)
+장점
+
+- fetcher 함수를 만들 수 있다.
+- isLoading같은 함수가 불렸는지 아닌지 알려주고, 함수가 끝날 때 결과값을 data에 저장해 접근하게 해줌
+- 캐시로 저장하여 데이터를 유지할 수 있다.
+  API로부터 response를 받아 캐시로 저장하기 때문에 data 찾을 때 캐시에서 찾고 다시 이전 페이지로 돌아와도 API에 접근하지 않는다. 저장된 캐시, 사용하는 쿼리를 보려면 [ReactQueryDevtools](https://tanstack.com/query/v5/docs/react/devtools)
 
 ## 기본 설정
 
@@ -741,18 +771,11 @@ useEffect(() => {
 }, []);
 
 // 위의 코드가 아래처럼 한 줄로 줄어듬
-//
 
 const { isLoading, data } = useQuery<ICoin[]>({
   queryKey: ["allCoins"], // 식별할 고유한 쿼리 키
   queryFn: fetchCoins, // fetcher함수
 });
-```
-
-##
-
-```ts
-
 ```
 
 ##

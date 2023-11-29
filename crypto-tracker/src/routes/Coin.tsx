@@ -160,6 +160,7 @@ function Coin() {
   });
 
   const loading = infoLoading || tickersLoading;
+
   return (
     <Container>
       <Header>
@@ -214,5 +215,3 @@ function Coin() {
   );
 }
 export default Coin;
-
-// #5.5
