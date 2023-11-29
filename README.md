@@ -28,8 +28,10 @@ F1 → setting Json-UI 검색&클릭 → terminal.integrated.profiles.windows �
 
 - react: "18.2.0",
 - react-router-dom: "6.20.0",
+- react-query: "3.39.3",
 - styled-components: "6.1.1",
 - typescript: "4.9.5",
+- @tanstack/react-query: "^5.8.9",
 
 > 설치 방법
 
@@ -45,6 +47,11 @@ npm i styled-components
 
 # React Router 설치
 npm i react-router-dom
+
+# React Query
+npm i react-query
+# react v18은 쿼리를 못불러와서 모듈 설치
+npm i @tanstack/react-query
 ```
 
 Styled Components 자동완성 플러그인
@@ -278,7 +285,7 @@ const plus = (a: number, b: number) => a + b;
 plus(1, 1);
 ```
 
-## interface
+## Interface
 
 - 타입스크립트에게 ojbect 형태를 설명해 줌(코드 실행 전 브라우저에 에러 나옴)
 - 우리 자신(?)과 props를 보호
@@ -346,7 +353,7 @@ function Circle({ bgColor, borderColor, text = "default text" }: CircleProps) {
 }
 ```
 
-## useState
+## useState()
 
 ```tsx
 import { useState } from "react";
@@ -467,7 +474,9 @@ function App() {
 
 ```
 
-## 데이터 가져오기
+## async, await, fetch
+
+- 데이터 가져오기
 
 ```js
 useEffect(() => {
@@ -502,10 +511,10 @@ Object.values(temp1)
   .join();
 ```
 
-## useEffect
+## useEffect()
 
-컴포넌트의 시작에서만 코드를 실행하고 싶으면 []
-컴포넌트의 변수가 변할 때마다 코드를 실행하고 싶으면 [변수]
+- 컴포넌트의 시작에서만 코드를 실행하고 싶으면 []
+- 컴포넌트의 변수가 변할 때마다 코드를 실행하고 싶으면 [변수]
 
 ```ts
 useEffect(() => {
@@ -563,7 +572,7 @@ function Router() {
 
   [v6.20 자세히 읽어보기](https://ui.dev/react-router-nested-routes/)
 
-### url에 nested 시키기!
+### url nested
 
 - 첫 번째 방법
 
@@ -616,7 +625,7 @@ function Coin() {
 }
 ```
 
-### tab으로 nested
+### tab nested
 
 ```ts
 <Link to={`/${coinId}/chart`}>Chart</Link>
@@ -669,10 +678,75 @@ const Tab = styled.li<{ isactive: boolean }>`
 </Tabs>;
 ```
 
-## React Query
+# React Query
+
+[공식문서](https://tanstack.com/query/v5/)
+
+데이터를 유지, 캐시로 저장함
+API로부터 response를 받아 캐시로 저장하기 때문에 data 찾을 때 캐시에서 찾고 다시 이전 페이지로 돌아와도 API에 접근하지 않는다. 저장된 캐시, 사용하는 쿼리를 보려면 [ReactQueryDevtools](https://tanstack.com/query/v5/docs/react/devtools)
+
+## 기본 설정
 
 ```ts
+// index.tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+// 생략
+
+const queryClient = new QueryClient();
+
+root.render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </QueryClientProvider>
+  </React.StrictMode>
+);
+```
+
+**이로써 리액트 쿼리 사용할 수 있게 되었다.**
+
+## fetcher 함수
+
+promise를 반환해야한다.
+
+```ts
+// api.ts에서 fetcher함수 생성
+export async function fetchCoins() {
+  // promise 반환
+  return fetch("https://api.coinpaprika.com/v1/coins").then((response) =>
+    response.json()
+  );
+}
+```
+
+## useQuery()
+
+```ts
+// Coins.tsx
+
+const [coins, setCoins] = useState<ICoin[]>([]);
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  (async () => {
+    const response = await fetch("https://api.coinpaprika.com/v1/coins");
+    const json = await response.json();
+
+    setCoins(json.slice(0, 100));
+    setLoading(false);
+  })();
+}, []);
+
+// 위의 코드가 아래처럼 한 줄로 줄어듬
+//
+
+const { isLoading, data } = useQuery<ICoin[]>({
+  queryKey: ["allCoins"], // 식별할 고유한 쿼리 키
+  queryFn: fetchCoins, // fetcher함수
+});
 ```
 
 ##
