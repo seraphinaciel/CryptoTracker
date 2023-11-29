@@ -598,7 +598,7 @@ function Router() {
 
 자식 Route를 (부모 element의 내부가 아닌) Route 내부에 작성
 부모의 element 안에 Outlet을 이용해 자식 Route들을 render 시키면 됨.
-outlet 사용중 props를 넘기고 싶을 경우 [useOutletContext로 넘어가기]()
+outlet 사용중 props를 넘기고 싶을 경우 [useOutletContext로 넘어가기](#useoutletcontext)
 
 ```ts
 // Router.tsx
