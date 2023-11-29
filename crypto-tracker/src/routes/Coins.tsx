@@ -62,14 +62,13 @@ function Coins() {
   const [coins, setCoins] = useState<CoinInterface[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // useEffect : 특정한 시기에만 코드를 실행
   useEffect(() => {
     (async () => {
       const response = await fetch("https://api.coinpaprika.com/v1/coins");
       const json = await response.json();
+
       setCoins(json.slice(0, 100));
       setLoading(false);
-      //
     })();
   }, []);
 

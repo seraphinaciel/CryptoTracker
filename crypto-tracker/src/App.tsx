@@ -2,11 +2,6 @@
 import { createGlobalStyle } from "styled-components";
 import Router from "./Router";
 
-{
-  /* <style>
-  
-</style> */
-}
 // 전역 스타일 처리하는 헬퍼 함수
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700;900&display=swap');
@@ -63,12 +58,14 @@ table {
 body {
   font-family: 'Roboto', sans-serif;
   background-color:${(props) => props.theme.bgColor};
-  color:${(props) => props.theme.textColor}
+  color:${(props) => props.theme.textColor};
+  line-height: 1.5;
 }
 a {
   text-decoration:none;
   color:inherit;
 }`;
+
 function App() {
   return (
     <>
