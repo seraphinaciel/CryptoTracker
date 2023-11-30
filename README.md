@@ -29,9 +29,12 @@ F1 → setting Json-UI 검색&클릭 → terminal.integrated.profiles.windows �
 - react: "18.2.0",
 - react-router-dom: "6.20.0",
 - react-query: "3.39.3",
-- styled-components: "6.1.1",
-- typescript: "4.9.5",
+- react-helmet: "6.1.0",
 - @tanstack/react-query: "^5.8.9",
+- typescript: "4.9.5",
+- styled-components: "6.1.1",
+- apexcharts: "3.44.0",
+- react-apexcharts: "1.4.1",
 
 > 설치 방법
 
@@ -52,9 +55,19 @@ npm i react-router-dom
 npm i react-query
 # react v18은 쿼리를 못불러와서 모듈 설치
 npm i @tanstack/react-query
+
+# ApexCharts
+npm install --save react-apexcharts apexcharts
+
+# React Helmet
+npm i react-helmet
+# 타입스크립트에서 안 먹힐때는 @types 붙여서
+npm i --save-dev @types/react-helmet
+
 ```
 
-Styled Components 자동완성 플러그인
+> Styled Components 자동완성 플러그인
+
 {vscode-styled-components}
 
 # Styled Components
@@ -502,9 +515,19 @@ useEffect(() => {
 }, []);
 ```
 
-## object 값 가져오기
+## useParams()
 
 ```ts
+// Chart.tsx
+function Chart() {
+  const params = useParams();
+  console.log(params);
+
+  const { coinId } = useParams<string>();
+}
+```
+
+```bash
 Object.values(temp1);
 Object.values(temp1)
   .map((v) => typeof v)
@@ -708,12 +731,12 @@ export function fetchCoinHistory(coinId: string | undefined) {
 
 [공식문서](https://tanstack.com/query/v5/)
 
-장점
+_장점_
 
 - fetcher 함수를 만들 수 있다.
 - isLoading같은 함수가 불렸는지 아닌지 알려주고, 함수가 끝날 때 결과값을 data에 저장해 접근하게 해줌
 - 캐시로 저장하여 데이터를 유지할 수 있다.
-  API로부터 response를 받아 캐시로 저장하기 때문에 data 찾을 때 캐시에서 찾고 다시 이전 페이지로 돌아와도 API에 접근하지 않는다. 저장된 캐시, 사용하는 쿼리를 보려면 [ReactQueryDevtools](https://tanstack.com/query/v5/docs/react/devtools)
+  API로부터 response를 받아 캐시로 저장하기 때문에 data 찾을 때 캐시에서 찾고 다시 이전 페이지로 돌아와도 API에 접근하지 않는다. 저장된 캐시, 사용하는 쿼리를 개발자 도구로 보려면 [ReactQueryDevtools](https://tanstack.com/query/v5/docs/react/devtools)
 
 ## 기본 설정
 
@@ -754,6 +777,32 @@ export async function fetchCoins() {
 
 ## useQuery()
 
+### 기본 문법
+
+```ts
+const { return 변수(?)) } = useQuery<인터페이스>({
+  queryKey: ["식별가능한 고유한 쿼리 키"], //
+  queryFn: fetcher함수,
+  선택항목,
+});
+```
+
+- _return 변수_
+  - isLoading, data 등 사용이 가능한 변수가 공식문서에 있으니 참조.
+- _queryKey_
+  - 식별 가능한 고유한 쿼리 키, [쿼리키 보기](https://tanstack.com/query/latest/docs/react/guides/query-keys)
+  - 쿼리 키는 안정적인 해시로 해시.
+  - 이 키가 변경되면 쿼리가 자동으로 업데이트(활성화됨이 false로 설정되지 않은 경우).
+- _queryFn_
+  - 기본 쿼리 기능이 정의되지 않은 경우에만 해당되는 필수 항목.
+  - 쿼리가 데이터를 요청하는 데 사용할 함수.
+  - QueryFunctionContext를 수신.
+  - 데이터를 해결하거나 오류를 발생시키는 promise를 반환해야 함(fetcher함수)
+- 선택 항목
+  - [refetchInterval](https://react-query.tanstack.com/reference/useQuery#_top)
+    - 숫자 : 모든 쿼리가 밀리초 단위로 이 빈도로 계속 다시 가져옴
+    - 함수 : 빈도를 계산하는 쿼리와 함께 함수가 실행
+
 ```ts
 // Coins.tsx
 
@@ -773,27 +822,137 @@ useEffect(() => {
 // 위의 코드가 아래처럼 한 줄로 줄어듬
 
 const { isLoading, data } = useQuery<ICoin[]>({
-  queryKey: ["allCoins"], // 식별할 고유한 쿼리 키
-  queryFn: fetchCoins, // fetcher함수
+  queryKey: ["allCoins"],
+  queryFn: fetchCoins,
+  refetchInterval: 5000,
 });
 ```
 
-##
+# Apex Charts
+
+기본 문법 : `<Chart type="차트 유형" series={[차트에 표시하려는 데이터]} options={차트의 구성 옵션}`
+
+※ 자세한 내용은 [공식문서](https://apexcharts.com/docs/installation/) 참조
 
 ```ts
+// Chart.tsx
+import ApexChart from "react-apexcharts";
 
+function Chart() {
+  return (
+    <div>
+      <ApexChart
+        type="line" // default line
+        series={[
+          // default undefined
+          {
+            name: "Price",
+            data: data?.map((price) => price.close) ?? [],
+          },
+        ]}
+        options={{
+          //차트 꾸미기
+          theme: {
+            mode: "dark",
+          },
+          chart: {
+            width: 500, // default 100%
+            height: 300, // default auto
+            toolbar: {
+              show: false,
+            },
+            background: "transparent",
+          },
+          grid: { show: false },
+          stroke: {
+            curve: "smooth",
+            width: 4,
+          },
+          yaxis: {
+            show: false,
+          },
+          xaxis: {
+            axisBorder: { show: false },
+            axisTicks: { show: false },
+            labels: { show: false },
+            type: "datetime", // date로 타입 변경, 얘 안하면 utc 형태로 주루룩 날짜가 나옴
+            categories: data?.map((date) =>
+              new Date(date.time_close * 1000).toUTCString()
+            ), // 툴팁에 나오는 date, 현 날짜를 초단위로 들어오니 UTC 형태로 변환해야함
+          },
+          fill: {
+            type: "gradient",
+            gradient: { gradientToColors: ["#0be881"], stops: [0, 100] },
+          },
+          colors: ["#0fbcf9"],
+          tooltip: {
+            y: {
+              formatter: (value) => `$ ${value.toFixed(3)}`, // y축의 값 형식
+            },
+          },
+        }}
+      />
+    </div>
+  );
+}
+export default Chart;
+
+// #5.13
 ```
 
-##
+# React Helmet
+
+[공식 홈페이지](https://www.npmjs.com/package/react-helmet)
+
+- title, base, meta, link, script, noscript, and style 태그 등 유효한 모든 `<head>` 태그를 지원.
+- body, html 및 title 태그에 대한 속성을 지원.
+- 서버 측 렌더링을 지원.
+- 중첩된 구성 요소는 중복된 헤드 변경 사항을 재정의.
+- 동일한 구성 요소에 지정하면 중복된 헤드 변경 사항이 유지됨("apple-touch-icon"과 같은 태그 지원).
+- DOM 변경 추적을 위한 콜백.
 
 ```ts
-
+// Coin.tsx
+import { Helmet } from "react-helmet";
+function Coin() {
+  return (
+    <Helmet>
+      <title>문서의 제목</title>
+      <meta name="description" content="Helmet application" />
+    </Helmet>
+  );
+}
 ```
 
-##
+# 숙제
+
+뒤로 가기 버튼
+price 탭 만들기
+line 차트를 candlestick 차트로 만들기
+
+# 배포
+
+실제 라우터 경로 : “https://닉네임.github.io/”
+내 플젝 설정 경로 : “https://닉네임.github.io/리포지터리이름/”
+
+"/"라우터 경로가 맞지 않기 때문에 빈 화면만 뜨는 에러!
+
+BrowserRouter에 `basename={process.env.PUBLIC_URL}` 추가
+PUBLIC_URL : package.json의 homepage URL값으로 설정
+
+[create react app docs 참고](https://create-react-app.dev/docs/advanced-configuration/)
 
 ```ts
+// Router.tsx
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+function Router() {
+  return (
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <Routes>...</Routes>
+    </BrowserRouter>
+  );
+}
 ```
 
 ##
