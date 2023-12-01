@@ -777,6 +777,8 @@ export async function fetchCoins() {
 
 ## useQuery()
 
+[사용법](https://mycodings.fly.dev/blog/2023-09-17-how-to-use-react-query-and-usequery)
+
 ### 기본 문법
 
 ```ts
@@ -787,7 +789,7 @@ const { return 변수(?)) } = useQuery<인터페이스>({
 });
 ```
 
-- _return 변수_
+- _return 기본제공 변수_
   - isLoading, data 등 사용이 가능한 변수가 공식문서에 있으니 참조.
 - _queryKey_
   - 식별 가능한 고유한 쿼리 키, [쿼리키 보기](https://tanstack.com/query/latest/docs/react/guides/query-keys)
@@ -926,9 +928,10 @@ function Coin() {
 
 # 숙제
 
-뒤로 가기 버튼
-price 탭 만들기
-line 차트를 candlestick 차트로 만들기
+✅ 뒤로 가기 버튼
+✅ line 차트를 candlestick
+`[{ x: date, y: [O,H,L,C] }]`
+✅ price 탭 만들기
 
 # 배포
 

@@ -16,15 +16,30 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 const Header = styled.header`
-  display: flex;
-  justify-content: center;
-  align-items: center;
   margin: 0 0 20px;
+  position: relative;
 `;
 
 const Title = styled.h1`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 48px;
   color: ${(props) => props.theme.btnColor};
+`;
+
+const Back = styled.button`
+  position: absolute;
+  top: calc(50% - 16px);
+  left: 0;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  border-radius: 50%;
+  border: 0;
+  &:hover {
+    background-color: ${(props) => props.theme.btnColor};
+  }
 `;
 
 const Loader = styled.span`
@@ -58,7 +73,7 @@ const Description = styled.p`
 
 const Tabs = styled.ul`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   margin: 25px 0;
   gap: 10px;
 `;
@@ -88,7 +103,7 @@ interface ITag {
   name: string;
 }
 
-interface InfoData {
+interface IInfoData {
   id: string;
   name: string;
   symbol: string;
@@ -110,7 +125,7 @@ interface InfoData {
   last_data_at: string;
 }
 
-interface TickersData {
+export interface ITickersData {
   id: string;
   name: string;
   symbol: string;
@@ -147,15 +162,16 @@ interface TickersData {
 function Coin() {
   const { coinId } = useParams<string>();
   const { state } = useLocation() as RouterState;
-  const chartMatch = useMatch("/:coinId/chart");
+  const lineChartMatch = useMatch("/:coinId/line");
+  const candleChartMatch = useMatch("/:coinId/candle");
   const priceMatch = useMatch("/:coinId/price");
 
-  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>({
+  const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>({
     queryKey: ["info", coinId],
     queryFn: () => fetchCoinInfo(coinId),
   });
   const { isLoading: tickersLoading, data: tickersData } =
-    useQuery<TickersData>({
+    useQuery<ITickersData>({
       queryKey: ["ticker", coinId],
       queryFn: () => fetchCoinTickers(coinId),
       // refetchInterval: 5000,
@@ -170,11 +186,16 @@ function Coin() {
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </title>
       </Helmet>
+
       <Header>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
+        <Back>
+          <Link to="/">&larr;</Link>
+        </Back>
       </Header>
+
       {loading ? (
         <Loader>Loading...</Loader>
       ) : (
@@ -207,9 +228,14 @@ function Coin() {
             </OverviewItem>
           </Overview>
 
+          <Description>👇🏻 Click the down below</Description>
+
           <Tabs>
-            <Tab isactive={chartMatch !== null}>
-              <Link to={`/${coinId}/chart`}>Chart</Link>
+            <Tab isactive={lineChartMatch !== null}>
+              <Link to={`/${coinId}/line`}>Chart Line</Link>
+            </Tab>
+            <Tab isactive={candleChartMatch !== null}>
+              <Link to={`/${coinId}/candle`}>Chart Candle</Link>
             </Tab>
             <Tab isactive={priceMatch !== null}>
               <Link to={`/${coinId}/price`}>Price</Link>

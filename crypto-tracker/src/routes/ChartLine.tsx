@@ -15,7 +15,7 @@ interface IHistorical {
   market_cap: number;
 }
 
-function Chart() {
+function ChartLine() {
   const { coinId } = useParams<string>();
   const { isLoading, data } = useQuery<IHistorical[]>({
     queryKey: ["ohlcv", coinId],
@@ -40,25 +40,43 @@ function Chart() {
               mode: "dark",
             },
             chart: {
+              animations: {
+                enabled: true,
+                easing: "easeinout",
+                speed: 800,
+                dynamicAnimation: {
+                  enabled: true,
+                  speed: 350,
+                },
+              },
               // width: 500,
               height: 300,
               toolbar: {
-                show: false,
+                show: true,
+                tools: {
+                  zoomin: false,
+                  zoomout: false,
+
+                  pan: false,
+                },
               },
               background: "transparent",
             },
-            grid: { show: false },
+            grid: {
+              show: true,
+              borderColor: "rgba(255,255,255,0.12",
+            },
             stroke: {
               curve: "smooth",
               width: 4,
             },
             yaxis: {
-              show: false,
+              show: true,
             },
             xaxis: {
               axisBorder: { show: false },
               axisTicks: { show: false },
-              labels: { show: false },
+              labels: { show: true },
               type: "datetime",
               categories: data?.map((date) =>
                 new Date(date.time_close * 1000).toUTCString()
@@ -80,4 +98,4 @@ function Chart() {
     </div>
   );
 }
-export default Chart;
+export default ChartLine;
