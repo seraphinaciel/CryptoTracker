@@ -935,13 +935,14 @@ function Coin() {
 
 # 배포
 
-실제 라우터 경로 : “https://닉네임.github.io/”
-내 플젝 설정 경로 : “https://닉네임.github.io/리포지터리이름/”
+실제 라우터 경로 : `https://닉네임.github.io/`
+내 플젝 설정 경로 : `https://닉네임.github.io/리포지터리이름/`
 
-"/"라우터 경로가 맞지 않기 때문에 빈 화면만 뜨는 에러!
+> 라우터 경로가 맞지 않기 때문에 빈 화면만 뜨는 에러!
 
-BrowserRouter에 `basename={process.env.PUBLIC_URL}` 추가
-PUBLIC_URL : package.json의 homepage URL값으로 설정
+> BrowserRouter에 `basename={process.env.PUBLIC_URL}` 추가
+
+> PUBLIC_URL : package.json의 homepage URL값으로 설정
 
 [create react app docs 참고](https://create-react-app.dev/docs/advanced-configuration/)
 
@@ -952,11 +953,19 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 function Router() {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
-      <Routes>...</Routes>
+      <Routes>생략</Routes>
     </BrowserRouter>
   );
 }
 ```
+
+# State Management
+
+> recoil, redux 같은 라이브러리를 사용하여 관리해야 함
+
+## Recoil
+
+> state 관리 라이브러리
 
 ##
 

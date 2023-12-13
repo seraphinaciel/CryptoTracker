@@ -1,6 +1,10 @@
 // import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
 import Router from "./Router";
+// state로 모드를 추가
+import { ThemeProvider } from "styled-components";
+import { darkTheme, lightTheme } from "./theme";
+import { useState } from "react";
 
 // 전역 스타일 처리하는 헬퍼 함수
 const GlobalStyle = createGlobalStyle`
@@ -67,10 +71,15 @@ a {
 }`;
 
 function App() {
+  const [isDark, setIsDark] = useState(false);
+  const toggleDark = () => setIsDark((current) => !current);
   return (
     <>
-      <GlobalStyle />
-      <Router />
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <button onClick={toggleDark}>Toggle Mode</button>
+        <GlobalStyle />
+        <Router />
+      </ThemeProvider>
     </>
   );
 }
