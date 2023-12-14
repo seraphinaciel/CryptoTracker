@@ -15,7 +15,11 @@ interface IHistorical {
   market_cap: number;
 }
 
-function ChartLine() {
+interface ChartProps {
+  isDark: boolean;
+}
+
+function ChartLine({ isDark }: ChartProps) {
   const { coinId } = useParams<string>();
   const { isLoading, data } = useQuery<IHistorical[]>({
     queryKey: ["ohlcv", coinId],
@@ -37,7 +41,7 @@ function ChartLine() {
           ]}
           options={{
             theme: {
-              mode: "dark",
+              mode: isDark ? "dark" : "light",
             },
             chart: {
               animations: {

@@ -963,11 +963,19 @@ function Router() {
 
 > recoil, redux 같은 라이브러리를 사용하여 관리해야 함
 
+## global state
+
+> log in처럼 모든 페이지에 걸쳐있는 경우
+
+> 서로다른 child component에게 prop을 계속해서 보내주는것은 상당히 까다로운일.
+
+> 그래서 state management 라이브러리를 활용하면, 이런 prop drilling 방식이아니라, 전역적으로 접근할수있는 상태를 만들어준다.
+
+> isDark: App.jsx -> Router -> Coin -> Chart 계층 구조에서 어디에서든 접근이 가능한 App.jsx -> (isDark) <- Router.jsx 버블 구조로 바꿀 수 있게 해줌
+
 ## Recoil
 
 > state 관리 라이브러리
-
-##
 
 ```ts
 

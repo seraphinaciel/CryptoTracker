@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useOutletContext, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { useQuery } from "@tanstack/react-query";
@@ -33,17 +33,14 @@ const Coin = styled.li`
     }
   }
 `;
-
 const Title = styled.h1`
   font-size: 48px;
   color: ${(props) => props.theme.btnColor};
 `;
-
 const Loader = styled.span`
   text-align: center;
   display: block;
 `;
-
 const Img = styled.img`
   width: 25px;
   height: 25px;
@@ -60,11 +57,18 @@ interface ICoin {
   type: string;
 }
 
-function Coins() {
+interface ICoinsProps {
+  toggleDark: () => void;
+  isDark: boolean;
+}
+
+function Coins({ toggleDark, isDark }: ICoinsProps) {
   const { isLoading, data } = useQuery<ICoin[]>({
     queryKey: ["allCoins"],
     queryFn: fetchCoins,
   });
+
+  console.log("list : " + typeof isDark);
 
   return (
     <Container>
@@ -73,6 +77,7 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>Coins</Title>
+        <button onClick={toggleDark}>Toggle Mode</button>
       </Header>
 
       {isLoading ? (

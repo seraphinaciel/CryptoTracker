@@ -5,6 +5,7 @@ import Router from "./Router";
 import { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "./theme";
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 
 // 전역 스타일 처리하는 헬퍼 함수
 const GlobalStyle = createGlobalStyle`
@@ -76,9 +77,9 @@ function App() {
   return (
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <button onClick={toggleDark}>Toggle Mode</button>
         <GlobalStyle />
-        <Router />
+        <Router isDark={isDark} toggleDark={toggleDark} />
+        <Outlet context={{ toggleDark, isDark }} />
       </ThemeProvider>
     </>
   );

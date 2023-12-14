@@ -4,6 +4,7 @@ import {
   Outlet,
   useLocation,
   useMatch,
+  useOutletContext,
   useParams,
 } from "react-router-dom";
 import styled from "styled-components";
@@ -159,7 +160,11 @@ export interface ITickersData {
   };
 }
 
-function Coin() {
+interface ICoinProps {
+  isDark: boolean;
+}
+
+function Coin({ isDark }: ICoinProps) {
   const { coinId } = useParams<string>();
   const { state } = useLocation() as RouterState;
   const lineChartMatch = useMatch("/:coinId/line");
@@ -179,6 +184,7 @@ function Coin() {
 
   const loading = infoLoading || tickersLoading;
 
+  console.log("coin : " + typeof isDark);
   return (
     <Container>
       <Helmet>
@@ -242,7 +248,7 @@ function Coin() {
             </Tab>
           </Tabs>
 
-          <Outlet />
+          <Outlet context={isDark} />
         </>
       )}
     </Container>
