@@ -959,15 +959,11 @@ function Router() {
 }
 ```
 
-# State Management
-
-> recoil, redux 같은 라이브러리를 사용하여 관리해야 함
-
 ## global state
 
-> log in처럼 모든 페이지에 걸쳐있는 경우
+> State Management는 recoil, redux 같은 라이브러리를 사용하여 관리해야 함
 
-> 서로다른 child component에게 prop을 계속해서 보내주는것은 상당히 까다로운일.
+> log in처럼 모든 페이지에 걸쳐있는 경우, 서로다른 child component에게 prop을 계속해서 보내주는것은 상당히 까다로운일.
 
 > 그래서 state management 라이브러리를 활용하면, 이런 prop drilling 방식이아니라, 전역적으로 접근할수있는 상태를 만들어준다.
 
