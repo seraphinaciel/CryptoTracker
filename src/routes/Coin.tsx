@@ -50,7 +50,7 @@ const Loader = styled.span`
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.listColor};
   padding: 10px 20px;
   border-radius: 10px;
 `;
@@ -82,12 +82,12 @@ const Tab = styled.li<{ isactive: boolean }>`
   text-align: center;
   text-transform: uppercase;
   font-size: 12px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.listColor};
   padding: 7px 0;
   border-radius: 10px;
   a {
     color: ${(props) =>
-      props.isactive ? props.theme.pointColor : props.theme.textColor};
+      props.isactive ? props.theme.btnColor : props.theme.textColor};
     display: block;
   }
 `;

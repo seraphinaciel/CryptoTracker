@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 // 비트코인 세계에서 하루치
 interface IHistorical {
@@ -22,6 +24,8 @@ function ChartCandle() {
     queryFn: () => fetchCoinHistory(coinId),
   });
 
+  const isDark = useRecoilValue(isDarkAtom);
+
   return (
     <div>
       {isLoading ? (
@@ -40,7 +44,7 @@ function ChartCandle() {
           ]}
           options={{
             theme: {
-              mode: "dark",
+              mode: isDark ? "dark" : "light",
             },
             chart: {
               type: "candlestick",

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
@@ -19,7 +19,7 @@ const Header = styled.header`
 `;
 const CoinsList = styled.ul``;
 const Coin = styled.li`
-  background-color: ${(props) => props.theme.pointColor};
+  background-color: ${(props) => props.theme.listColor};
   color: ${(props) => props.theme.textColor};
   margin: 0 0 10px;
   border-radius: 15px;
@@ -38,6 +38,14 @@ const Coin = styled.li`
 const Title = styled.h1`
   font-size: 48px;
   color: ${(props) => props.theme.btnColor};
+`;
+const ToggleBtn = styled.button<{ isDarkMode: boolean }>`
+  background-color: ${(props) => props.theme.textColor};
+  color: ${(props) => props.theme.bgColor};
+  border: 0;
+  border-radius: 10px;
+  padding: 4px 10px;
+  margin-left: 10px;
 `;
 const Loader = styled.span`
   text-align: center;
@@ -68,6 +76,7 @@ function Coins({}: ICoinsProps) {
   });
 
   const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const isDarkMode = useRecoilValue(isDarkAtom);
   const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
 
   return (
@@ -77,7 +86,9 @@ function Coins({}: ICoinsProps) {
       </Helmet>
       <Header>
         <Title>Coins</Title>
-        <button onClick={toggleDarkAtom}>Toggle Mode</button>
+        <ToggleBtn onClick={toggleDarkAtom} isDarkMode={isDarkMode}>
+          {isDarkMode ? "🌞 Light" : "🌙 Dark"}
+        </ToggleBtn>
       </Header>
 
       {isLoading ? (

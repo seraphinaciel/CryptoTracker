@@ -2,13 +2,13 @@ import { DefaultTheme } from "styled-components/dist/types";
 
 export const darkTheme: DefaultTheme = {
   bgColor: "#2f3640",
+  listColor: "#1d2022",
   textColor: "white",
   btnColor: "#44bd32",
-  pointColor: "#1d2022",
 };
 export const lightTheme: DefaultTheme = {
   bgColor: "whitesmoke",
+  listColor: "#d2f0d2",
   textColor: "#333",
-  btnColor: "#44bd32",
-  pointColor: "#d2f0d2",
+  btnColor: "#2c8c1d",
 };

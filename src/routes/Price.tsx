@@ -49,7 +49,7 @@ const Table = styled.section`
       padding: 10px 0;
       background-color: gainsboro;
       font-size: 12px;
-      color: ${(props) => props.theme.bgColor};
+      color: #333;
     }
     dd {
       order: 2;
