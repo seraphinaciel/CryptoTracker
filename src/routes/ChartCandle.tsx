@@ -26,6 +26,16 @@ function ChartCandle() {
 
   const isDark = useRecoilValue(isDarkAtom);
 
+  // 데이터 가공 및 예외처리(옵셔널 체이닝)
+  const exceptData = data ?? [];
+  // ?? : 널 병합 연산자
+  const chartData = exceptData?.map((i) => {
+    return {
+      x: i.time_close,
+      y: [i.open, i.high, i.low, i.close],
+    };
+  });
+
   return (
     <div>
       {isLoading ? (
@@ -35,11 +45,11 @@ function ChartCandle() {
           type="candlestick"
           series={[
             {
-              data:
-                data?.map((price) => ({
-                  x: new Date(Number(price.time_open) * 1000).toUTCString(),
-                  y: [price.open, price.high, price.low, price.close],
-                })) || [],
+              data: chartData,
+              // data?.map((price) => ({
+              //   x: new Date(Number(price.time_open) * 1000).toUTCString(),
+              //   y: [price.open, price.high, price.low, price.close],
+              // })) || [],
             },
           ]}
           options={{

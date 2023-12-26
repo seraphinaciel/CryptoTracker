@@ -24,11 +24,18 @@
 `[{ x: date, y: [O,H,L,C] }]`
 ✅ price 탭 만들기
 
-# Dark Mode
+## Dark Mode
 
 recoil과 ThemeProvider로 구현
 
 - `theme.tsx`에 dark/light 두 가지 `theme` 생성.
-- `ThemeProvider`적용 및 `GlobalStyle`과 `theme` 연결.
-- 토글 버튼을 눌렀을 때, `state`가 변경.
+- [Ambient Modules방식](https://www.typescriptlang.org/docs/handbook/modules/introduction.html)
+  - styled.d.ts 파일을 생성, DefaultTheme이라고 interface 선언
+- `ThemeProvider`적용 및 `GlobalStyle`과 `theme` 연결(전역적 적용).
+- 다크모드 확인을 위해 atom(isDark) 생성
+  - true : dark, false : light
+- 토글 버튼을 눌렀을 때, recoil의 `state`가 반대로 변경.
+  - `()=>{setIsDark((prev) => !prev)}`
 - `ThemeProvider`의 `theme` 프로퍼티 내부에 삼항연산자를 이용해 `state`가 변할 때 다른 `Theme`이 적용되도록 설정.
+
+## 뒤로 가기 버튼
