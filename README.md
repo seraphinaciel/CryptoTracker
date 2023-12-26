@@ -24,7 +24,7 @@
 `[{ x: date, y: [O,H,L,C] }]`
 ✅ price 탭 만들기
 
-## Dark Mode
+## Dark Mode.
 
 recoil과 ThemeProvider로 구현
 
